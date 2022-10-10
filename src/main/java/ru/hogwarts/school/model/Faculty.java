@@ -1,16 +1,26 @@
 package ru.hogwarts.school.model;
 
-import java.util.Objects;
+import ru.hogwarts.school.validator.Validator;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.util.Objects;
+@Entity
 public class Faculty {
+    @Id
+    @GeneratedValue
     private Long id;
     private String name;
     private String color;
 
     public Faculty(Long id, String name, String color) {
         this.id = id;
-        this.name = name;
-        this.color = color;
+        this.name = Validator.validateString(name,"Название факультета не может быть пустым и должено содержать только буквы.");
+        this.color = Validator.validateString(color,"Цвет факультета не может быть пустым и должен содержать только буквы.");
+    }
+
+    public Faculty() {
     }
 
     public Long getId() {
@@ -30,11 +40,11 @@ public class Faculty {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name =  Validator.validateString(name,"Название факультета не может быть пустым и должено содержать только буквы.");
     }
 
     public void setColor(String color) {
-        this.color = color;
+        this.color = Validator.validateString(color,"Цвет факультета не может быть пустым и должен содержать только буквы.");
     }
 
     @Override

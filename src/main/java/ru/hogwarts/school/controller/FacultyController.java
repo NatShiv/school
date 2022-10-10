@@ -5,6 +5,7 @@ import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.model.Faculty;
 
 import java.util.Collection;
+
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
@@ -25,9 +26,9 @@ public class FacultyController {
         return service.createFaculty(faculty);
     }
 
-    @PutMapping
-    public Faculty updateFaculty(@RequestBody Faculty faculty) {
-        return service.updateFaculty(faculty);
+    @PutMapping("{id}")
+    public Faculty updateFaculty(@PathVariable Long id, @RequestBody Faculty faculty) {
+        return service.updateFaculty(id, faculty);
     }
 
     @DeleteMapping("{id}")
