@@ -1,16 +1,26 @@
 package ru.hogwarts.school.model;
 
-import java.util.Objects;
+import ru.hogwarts.school.validator.Validator;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.util.Objects;
+@Entity
 public class Student {
+    @Id
+    @GeneratedValue
     private Long id;
     private String name;
     private int age;
 
     public Student(Long id, String name, int age) {
         this.id = id;
-        this.name = name;
-        this.age = age;
+        this.name =  Validator.validateName(name);
+        this.age = Validator.validateNumber(age);
+    }
+
+    public Student() {
     }
 
     public Long getId() {
@@ -30,11 +40,11 @@ public class Student {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name =  Validator.validateName(name);
     }
 
     public void setAge(int age) {
-        this.age = age;
+        this.age = Validator.validateNumber(age);
     }
 
     @Override

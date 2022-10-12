@@ -3,43 +3,37 @@ package ru.hogwarts.school.service;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
+import ru.hogwarts.school.validator.Validator;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 @Service
 public class StudentService {
-    private final Map<Long, Student> studentMap = new HashMap<>();
-    private Long keyID = 0L;
+    private final StudentRepository studentRepository;
+
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     public Student createStudent(Student student) {
-        student.setId(++keyID);studentMap.put(keyID, student);
-        return student;
+        return studentRepository.save(student);
     }
 
     public Student findStudent(Long id) {
-        if (!studentMap.containsKey(id)) {
-            throw new StudentNotFoundException(id);
-        }
-        return studentMap.get(id);
+        return studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
     }
-
-    public Student updateStudent(Student student) {
-        return studentMap.put(student.getId(), student);
+    public Student updateStudent(Long id, Student student) {
+        studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
+        return studentRepository.save(student);
     }
 
     public Student removeStudent(Long id) {
-        if (!studentMap.containsKey(id)) {
-            throw new StudentNotFoundException(id);
-        }
-        return studentMap.remove(id);
+        Student student = studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
+        studentRepository.deleteById(id);
+        return student;
     }
 
     public Collection<Student> findStudentByAge(int age) {
-        return studentMap.values().stream()
-                .filter(student -> student.getAge() == age)
-                .collect(Collectors.toList());
+        return studentRepository.findByAge(Validator.validateNumber(age));
     }
 }
