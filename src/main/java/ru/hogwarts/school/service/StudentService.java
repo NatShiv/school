@@ -7,6 +7,7 @@ import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.validator.Validator;
 
 import java.util.Collection;
+
 @Service
 public class StudentService {
     private final StudentRepository studentRepository;
@@ -22,6 +23,7 @@ public class StudentService {
     public Student findStudent(Long id) {
         return studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
     }
+
     public Student updateStudent(Long id, Student student) {
         studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
         return studentRepository.save(student);
@@ -35,5 +37,10 @@ public class StudentService {
 
     public Collection<Student> findStudentByAge(int age) {
         return studentRepository.findByAge(Validator.validateNumber(age));
+    }
+
+    public Collection<Student> findStudentBetweenAge(int min, int max) {
+        return studentRepository.findByAgeBetween(Validator.validateNumber(min),
+                Validator.validateNumber(max));
     }
 }

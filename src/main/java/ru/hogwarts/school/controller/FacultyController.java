@@ -37,7 +37,12 @@ public class FacultyController {
     }
 
     @GetMapping()
-    public Collection<Faculty> getStudentByAge(@RequestParam String color) {
-        return service.findFacultyByColor(color);
+    public Collection<Faculty> FindFaculty(@RequestParam(defaultValue = "") String name,
+                                           @RequestParam String color) {
+        if (name.equals("")) {
+            return service.findFacultyByColor(color);
+        }
+        return service.findFacultyByNameOrColor(name, color);
     }
+
 }

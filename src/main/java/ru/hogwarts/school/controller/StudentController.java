@@ -36,7 +36,11 @@ public class StudentController {
     }
 
     @GetMapping()
-    public Collection<Student> getStudentByAge(@RequestParam int age) {
-        return service.findStudentByAge(age);
+    public Collection<Student> findStudentByAge(@RequestParam int age,
+                                                @RequestParam(defaultValue = "0") int max) {
+        if (max == 0) {
+            return service.findStudentByAge(age);
+        }
+        return service.findStudentBetweenAge(age, max);
     }
 }
