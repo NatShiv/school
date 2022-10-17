@@ -17,8 +17,8 @@ public class Validator {
     }
 
     public static int validateNumber(int num) {
-        if (num <= 15 || num >= 30) {
-            throw new DataEntryError("Возраст студента в интервале от 15 до 30 лет.");
+        if (num <= 11 || num >= 20) {
+            throw new DataEntryError("Возраст студента в интервале от 11 до 20 лет.");
         }
         return num;
     }
@@ -28,7 +28,9 @@ public class Validator {
     }
 
     public static String validateName(String name) {
-        List<String> e = Arrays.stream(name.split(" ")).map((x) -> validateString(x, "Имя не может быть пустым и должено содержать только слова через пробел.")).toList();
+        List<String> e = Arrays.stream(name.split(" "))
+                .map((x) -> validateString(x, "Имя не может быть пустым и должено содержать только слова через пробел."))
+                .toList();
         StringBuilder stringBuilder = new StringBuilder((e.get(0)));
         for (int i = 1; i < e.size(); i++) {
             stringBuilder.append(" ").append(e.get(i));

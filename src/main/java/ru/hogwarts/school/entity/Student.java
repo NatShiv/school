@@ -1,25 +1,26 @@
-package ru.hogwarts.school.model;
+package ru.hogwarts.school.entity;
 
 import ru.hogwarts.school.validator.Validator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 @Entity
 public class Student {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
-    private int age;
 
+    private String name;
+
+    private int age;
+    @ManyToOne()
+    @JoinColumn(name = "Faculty_ID")
+    private Faculty faculty;
     public Student(Long id, String name, int age) {
         this.id = id;
         this.name =  Validator.validateName(name);
         this.age = Validator.validateNumber(age);
     }
-
     public Student() {
     }
 
@@ -33,6 +34,14 @@ public class Student {
 
     public int getAge() {
         return age;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public void facultySet(Faculty faculty) {
+        this.faculty = faculty;
     }
 
     public void setId(Long id) {
