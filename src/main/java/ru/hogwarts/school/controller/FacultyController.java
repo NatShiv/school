@@ -1,6 +1,7 @@
 package ru.hogwarts.school.controller;
 
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.exception.DataEntryError;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.entity.Faculty;
@@ -37,22 +38,20 @@ public class FacultyController {
         return service.removeFaculty(id);
     }
 
-//    @GetMapping(params = "color")
-//    public Collection<Faculty> findByColor(@RequestParam(defaultValue = " ") String color) {
-//        return service.findByColor(color);
-//    }
+    @GetMapping(params = "color")
+    public Collection<Faculty> findByColor(@RequestParam(defaultValue = " ") String color) {
+        return service.findByColor(color);
+    }
 // Пришлось убрать этот метод тк метод findByNameIgnoreCaseOrColorIgnoreCase  выполнит эту функцию.
 //А без создания другого ответвления пути это не работает
 
-    @GetMapping
-    public Collection<?> find(@RequestParam(defaultValue = " ") String nameOrColor,
-                                                 @RequestParam(defaultValue = "0") Long id) {
-        if (nameOrColor.isBlank() && id == 0) {
+    @GetMapping(params = "nameOrColor")
+    public Collection<Faculty> find(@RequestParam(defaultValue = " ") String nameOrColor){
+
+        if (nameOrColor.isBlank()) {
             throw new DataEntryError("Параметры запроса не должны быть пустыми.");
         }
-        if (id == 0) {
-            return service.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor);
-        }
-        return service.findStudentByFaculty(id);
+
+        return service.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor);
     }
 }
