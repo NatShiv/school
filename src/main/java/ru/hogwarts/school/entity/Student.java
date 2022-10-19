@@ -16,7 +16,12 @@ public class Student {
     @ManyToOne()
     @JoinColumn(name = "Faculty_ID")
     private Faculty faculty;
-    public Student(Long id, String name, int age) {
+
+    @OneToOne
+    @JoinColumn(name = "avatar_ID")
+    private AvatarStudent avatar;
+
+       public Student(Long id, String name, int age) {
         this.id = id;
         this.name =  Validator.validateName(name);
         this.age = Validator.validateNumber(age);
