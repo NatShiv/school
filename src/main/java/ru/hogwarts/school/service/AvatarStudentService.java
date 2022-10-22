@@ -33,7 +33,7 @@ public class AvatarStudentService {
          String extension = Optional.ofNullable(file.getOriginalFilename()).
                  map(s -> s.substring(file.getOriginalFilename().lastIndexOf("."))).
                  orElse(" ");
-         Path filePath = Path.of(avatarsDir, id + "." + extension);
+         Path filePath = Path.of(avatarsDir, id +  extension);
         try {
             Files.createDirectories(filePath.getParent());
             Files.deleteIfExists(filePath);

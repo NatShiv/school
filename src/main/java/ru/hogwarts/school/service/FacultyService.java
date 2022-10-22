@@ -5,19 +5,15 @@ import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.exception.DataEntryError;
 import ru.hogwarts.school.exception.FacultyNotFoundException;
 import ru.hogwarts.school.entity.Faculty;
-import ru.hogwarts.school.exception.StudentNotFoundException;
 import ru.hogwarts.school.repository.FacultyRepository;
-import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
 
 @Service
 public class FacultyService {
-    private final StudentRepository studentRepository;
     private final FacultyRepository facultyRepository;
 
-    public FacultyService(StudentRepository studentRepository, FacultyRepository facultyRepository) {
-        this.studentRepository = studentRepository;
+    public FacultyService(FacultyRepository facultyRepository) {
         this.facultyRepository = facultyRepository;
     }
 
@@ -52,7 +48,6 @@ public class FacultyService {
         return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor,nameOrColor);
     }
     public Collection<Student> findStudentByFaculty(Long id) {
-        studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
-        return facultyRepository.findStudents(id);
+             return facultyRepository.findStudents(id);
     }
 }

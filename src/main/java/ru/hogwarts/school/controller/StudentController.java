@@ -22,8 +22,8 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody Student student, @RequestParam(defaultValue = "null") Long id) {
-        return service.createStudent(student, id);
+    public Student createStudent(@RequestBody Student student) {
+        return service.createStudent(student);
     }
 
     @PutMapping("{id}")

@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.exception.DataEntryError;
@@ -24,8 +25,8 @@ public class FacultyController {
     }
 
     @PostMapping
-    public Faculty createFaculty(@RequestBody Faculty faculty) {
-        return service.createFaculty(faculty);
+    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
+        return ResponseEntity.ok().body(service.createFaculty(faculty));
     }
 
     @PutMapping("{id}")
@@ -51,8 +52,8 @@ public class FacultyController {
         return service.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor);
     }
 
-    @GetMapping("{id}/students")
-    public Collection<Student> findStudentByFaculty(@PathVariable Long id) {
-        return service.findStudentByFaculty(id);
+    @GetMapping("{facultyId}/students")
+    public Collection<Student> findStudentByFaculty(@PathVariable Long facultyId) {
+        return service.findStudentByFaculty(facultyId);
     }
 }

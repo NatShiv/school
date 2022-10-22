@@ -38,7 +38,7 @@ public class EmblemFacultyService {
         String extension = Optional.ofNullable(file.getOriginalFilename()).
                 map(s -> s.substring(file.getOriginalFilename().lastIndexOf("."))).
                 orElse(" ");
-        Path filePath = Path.of(emblemsDir, facultyID + "." + extension);
+        Path filePath = Path.of(emblemsDir, facultyID + extension);
         try {
             Files.createDirectories(filePath.getParent());
             Files.deleteIfExists(filePath);
