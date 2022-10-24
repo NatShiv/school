@@ -1,6 +1,8 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.entity.Student;
 import ru.hogwarts.school.exception.DataEntryError;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.entity.Faculty;
@@ -23,8 +25,8 @@ public class FacultyController {
     }
 
     @PostMapping
-    public Faculty createFaculty(@RequestBody Faculty faculty) {
-        return service.createFaculty(faculty);
+    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
+        return ResponseEntity.ok().body(service.createFaculty(faculty));
     }
 
     @PutMapping("{id}")
@@ -37,22 +39,21 @@ public class FacultyController {
         return service.removeFaculty(id);
     }
 
-//    @GetMapping(params = "color")
-//    public Collection<Faculty> findByColor(@RequestParam(defaultValue = " ") String color) {
-//        return service.findByColor(color);
-//    }
-// Пришлось убрать этот метод тк метод findByNameIgnoreCaseOrColorIgnoreCase  выполнит эту функцию.
-//А без создания другого ответвления пути это не работает
+    @GetMapping(params = "!nameOrColor")
+    public Collection<Faculty> findByColor(@RequestParam(defaultValue = " ") String color) {
+        return service.findByColor(color);
+    }
 
-    @GetMapping
-    public Collection<?> find(@RequestParam(defaultValue = " ") String nameOrColor,
-                                                 @RequestParam(defaultValue = "0") Long id) {
-        if (nameOrColor.isBlank() && id == 0) {
+    @GetMapping(params = "nameOrColor")
+    public Collection<?> findByNameIgnoreCaseOrColorIgnoreCase(@RequestParam(defaultValue = " ") String nameOrColor) {
+        if (nameOrColor.isBlank()) {
             throw new DataEntryError("Параметры запроса не должны быть пустыми.");
         }
-        if (id == 0) {
-            return service.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor);
-        }
-        return service.findStudentByFaculty(id);
+        return service.findByNameIgnoreCaseOrColorIgnoreCase(nameOrColor);
+    }
+
+    @GetMapping("{facultyId}/students")
+    public Collection<Student> findStudentByFaculty(@PathVariable Long facultyId) {
+        return service.findStudentByFaculty(facultyId);
     }
 }
