@@ -5,9 +5,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.entity.AvatarStudent;
 import ru.hogwarts.school.service.AvatarStudentService;
 
-@RestController("/avatar")
+import java.util.List;
+
+@RestController
+@RequestMapping("/avatar")
 public class AvatarStudentController {
     private final AvatarStudentService avatarStudentService;
 
@@ -15,8 +19,14 @@ public class AvatarStudentController {
         this.avatarStudentService = avatarStudentService;
     }
 
+    @GetMapping("/all")
+    public List<AvatarStudent> getAvatarPage(@RequestParam(defaultValue = "0") int pageNumber,
+                                      @RequestParam(defaultValue = "0") int pageSize) {
+             return avatarStudentService.getAvatarPage(pageNumber, pageSize);
+    }
+
     @PostMapping(value = "{studentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadEmblem(@PathVariable Long studentId, @RequestParam MultipartFile avatar){
+    public ResponseEntity<String> uploadEmblem(@PathVariable Long studentId, @RequestParam MultipartFile avatar) {
         if (avatar.getSize() > 1024 * 10000) {
             return ResponseEntity.badRequest().body("Размер файла должен быть меньше 10мб");
         }

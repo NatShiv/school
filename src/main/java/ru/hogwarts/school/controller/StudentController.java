@@ -1,5 +1,8 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.data.util.Pair;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.entity.Student;
@@ -20,7 +23,18 @@ public class StudentController {
     public Student getStudentInfo(@PathVariable Long id) {
         return service.findStudent(id);
     }
-
+    @GetMapping("/total")
+    public int getTotalStudent() {
+        return service.getTotalStudent();
+    }
+    @GetMapping("/averageAge")
+    public int getAverageAge() {
+        return service.getAverageAgeStudents();
+    }
+    @GetMapping("/fiveEndStudents")
+    public Collection<Student> findStudentByAge(){
+        return service.getFiveEndStudents();
+    }
     @PostMapping
     public Student createStudent(@RequestBody Student student) {
         return service.createStudent(student);
@@ -49,4 +63,14 @@ public class StudentController {
         }
         return service.findStudentBetweenAge(age, max);
     }
+
+    @GetMapping("/{id}/avatar")
+    public ResponseEntity<byte[]> getAvatar(@PathVariable Long id) {
+        Pair<String, byte[]> pair = service.getAvatar(id);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(pair.getFirst()))
+                .contentLength(pair.getSecond().length)
+                .body(pair.getSecond());
+    }
+
 }

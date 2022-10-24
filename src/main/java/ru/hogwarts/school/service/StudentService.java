@@ -1,6 +1,9 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.entity.AvatarStudent;
 import ru.hogwarts.school.entity.Faculty;
 import ru.hogwarts.school.exception.DataEntryError;
 import ru.hogwarts.school.exception.FacultyNotFoundException;
@@ -10,9 +13,14 @@ import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.validator.Validator;
 
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
 
 @Service
+@Transactional
 public class StudentService {
     private final StudentRepository studentRepository;
     private final FacultyRepository facultyRepository;
@@ -22,7 +30,7 @@ public class StudentService {
         this.facultyRepository = facultyRepository;
     }
 
-    public Student createStudent(Student student) {
+      public Student createStudent(Student student) {
         facultyRepository.findById(student.getFaculty().getId()).orElseThrow(() -> new FacultyNotFoundException(student.getFaculty().getId()));
         return studentRepository.save(student);
     }
@@ -62,5 +70,33 @@ public class StudentService {
         }
         return studentRepository.findByAgeBetween(Validator.validateNumber(min),
                 Validator.validateNumber(max));
+    }
+
+    public Pair<String, byte[]> getAvatar(Long id) {
+        Student student = studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
+        AvatarStudent avatarStudent = student.avatarGet();
+        try {
+            return Pair.of(avatarStudent.getMediaType(), Files.readAllBytes(Paths.get(avatarStudent.getFilePath())));
+        } catch (IOException e) {
+            throw new RuntimeException("Возникла проблема при чтении файла");
+        }
+    }
+    public void saveAvatar(Long id,AvatarStudent avatarStudent){
+        Student student = studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
+        student.avatarSet(avatarStudent);
+        studentRepository.save(student);
+    }
+
+    public int getTotalStudent() {
+        return studentRepository.totalStudents();
+    }
+
+    public int getAverageAgeStudents() {
+        return studentRepository.averageAge();
+    }
+
+    public Collection<Student> getFiveEndStudents(){
+        PageRequest pageRequest=PageRequest.of(0,5);
+        return studentRepository.getFiveEndStudents(pageRequest);
     }
 }
