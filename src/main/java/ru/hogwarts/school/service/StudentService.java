@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -107,14 +108,28 @@ public class StudentService {
         return studentRepository.totalStudents();
     }
 
-    public int getAverageAgeStudents() {
+    public Double getAverageAgeStudents() {
         logger.debug("Вызван метод - показать средний возраст студентов." );
-        return studentRepository.averageAge();
+       return studentRepository.findAll()  //на реальном проекте так делать не стоит
+                .stream()
+                .mapToDouble(Student::getAge)
+               .average().orElse(0);
+        //  return studentRepository.averageAge();
     }
 
     public Collection<Student> getFiveEndStudents(){
         logger.debug("Вызван метод - показать 5 последних студентов в списке.");
         PageRequest pageRequest=PageRequest.of(0,5);
         return studentRepository.getFiveEndStudents(pageRequest);
+    }
+
+    public Collection<String> findStudentByFirstLiterInName(String liter) {
+      return   studentRepository.findAll()  //на реальном проекте так делать не стоит
+              .stream()
+              .map(Student::getName)
+              .filter(a->a.startsWith(liter))
+              .map(String::toUpperCase)
+              .sorted()
+              .collect(Collectors.toList());
     }
 }

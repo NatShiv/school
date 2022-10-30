@@ -12,6 +12,7 @@ import ru.hogwarts.school.repository.FacultyRepository;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.Comparator;
 
 @Service
 @Transactional
@@ -78,4 +79,10 @@ public class FacultyService {
         faculty.emblemFacultySet(emblemFaculty);
         facultyRepository.save(faculty);
     }
+
+    public String getFacultyWhitLongName() {
+   return facultyRepository.findAll().stream().map(Faculty::getName).max(Comparator.comparingInt(String::length))
+           .orElseThrow(()->new DataEntryError("Нет факультетов"));
+    }
+    //на реальном проекте так делать не стоит
 }

@@ -28,7 +28,7 @@ public class StudentController {
         return service.getTotalStudent();
     }
     @GetMapping("/averageAge")
-    public int getAverageAge() {
+    public Double getAverageAge() {
         return service.getAverageAgeStudents();
     }
     @GetMapping("/fiveEndStudents")
@@ -48,6 +48,10 @@ public class StudentController {
     @DeleteMapping("{id}")
     public Student deleteStudentInfo(@PathVariable Long id) {
         return service.removeStudent(id);
+    }
+    @GetMapping("/studentsName/{liter}")
+    public Collection<String> findStudentByFirstLiterInName(@PathVariable String liter){
+        return service.findStudentByFirstLiterInName(liter);
     }
 
     @GetMapping("{id}/faculty")
