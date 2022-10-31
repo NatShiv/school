@@ -76,5 +76,12 @@ public class StudentController {
                 .contentLength(pair.getSecond().length)
                 .body(pair.getSecond());
     }
-
+    @GetMapping("/studentsName")
+    public void printStudentsName() {
+        service.printStudentsName();
+    }
+    @GetMapping("/studentsNameSync")
+    public void printStudentsNameSync() {
+        service.printStudentsNameSynchr();
+    }
 }
