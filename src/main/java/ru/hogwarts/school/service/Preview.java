@@ -1,5 +1,8 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,7 +14,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Preview {
+    private static Logger logger= LoggerFactory.getLogger(Preview.class);
     public static byte[] generateImagePreview(Path filePath) {
+        logger.debug("Вызван метод для уменьшения изображения.");
         try (InputStream inputStream = Files.newInputStream(filePath);
              BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 1024);
              ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
@@ -29,6 +34,7 @@ public class Preview {
             return byteArrayOutputStream.toByteArray();
         } catch (
                 IOException e) {
+            logger.error("Возникла проблема при уменьшении файла");
             throw new RuntimeException("Возникла проблема при уменьшении файла");
         }
     }

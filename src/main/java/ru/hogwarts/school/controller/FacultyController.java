@@ -39,6 +39,11 @@ public class FacultyController {
         return service.removeFaculty(id);
     }
 
+    @GetMapping("/longName")
+    public String getFacultyWhitLongName() {
+        return service.getFacultyWhitLongName();
+    }
+
     @GetMapping(params = "!nameOrColor")
     public Collection<Faculty> findByColor(@RequestParam(defaultValue = " ") String color) {
         return service.findByColor(color);
